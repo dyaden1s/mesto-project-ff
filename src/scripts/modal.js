@@ -26,3 +26,8 @@ export function closePopupByOverlay(event) {
         closePopup(event.target);
     }
 }
+
+export function closePopupByButton (button){
+    const popup = button.closest('.popup');
+    closePopup(popup);
+}
