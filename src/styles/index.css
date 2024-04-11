@@ -14,3 +14,40 @@
 .profile__image {
     background-image: url('../images/avatar.jpg');
 }
+
+.card__likes-counter {
+    font-size: 13px;
+}
+
+.card__description-items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.submit-disabled {
+    background: transparent;
+    border: 1px solid #000;
+    color: #000;
+    opacity: .2;
+    transition: .3s;
+    pointer-events: none;
+}
+
+.input__container{
+    height: 28px;
+}
+
+.input_span {
+    display: block;
+    color: red;
+    font-size: 12px;
+}
+
+.input_type-invalid {
+    border-bottom: 1px solid red;
+}
+
+
+

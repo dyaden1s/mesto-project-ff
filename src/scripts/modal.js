@@ -1,4 +1,4 @@
-// Функция открытия попапа
+/// Функция открытия попапа
 export function openPopup(popup) {
     popup.classList.add('popup_is-opened');
     document.addEventListener('keydown', handleEscPress);
@@ -11,7 +11,7 @@ export function closePopup(popup) {
 }
 
 // Обработчик события нажатия клавиши Esc
-export function handleEscPress(event) {
+function handleEscPress(event) {
     if (event.key === 'Escape') {
         const openedPopup = document.querySelector('.popup_is-opened');
         if (openedPopup) {
@@ -25,9 +25,4 @@ export function closePopupByOverlay(event) {
     if (event.target.classList.contains('popup')) {
         closePopup(event.target);
     }
-}
-
-export function closePopupByButton (button){
-    const popup = button.closest('.popup');
-    closePopup(popup);
 }
