@@ -1,6 +1,6 @@
-import {createCard, toggleLike, deleteCard} from "./card";
+import {createCard, toggleLike, deleteCard, likeCard} from "./card";
 import {openPopup, closePopup, closePopupByOverlay} from "./modal";
-import {updateInput, formValidation} from "./validation";
+import {clearValidation, enableValidation} from "./validation";
 import {addNewCardApi, editProfileApi, getCards, getUser, updateAvatar} from "./api";
 
 const placesList = document.querySelector('.places__list');
@@ -14,7 +14,7 @@ Promise.all([getUser(), getCards()])
         outputUserData(userData);
 
         cardsData?.forEach(card => {
-            const newCard = createCard(card, deleteCard, toggleLike, userData._id, openImagePopup);
+            const newCard = createCard(card, deleteCard, toggleLike, userData._id, openImagePopup, likeCard);
             placesList.appendChild(newCard);
         });
 
@@ -67,7 +67,7 @@ editButton.addEventListener('click', function () {
 
     // Открытие попапа редактирования профиля
     openPopup(editPopup);
-    updateInput(formValidationConfig,formEdit);
+    clearValidation(formValidationConfig,formEdit);
 
     if (editSaveButton.classList.contains('submit-disabled')) {
         editSaveButton.classList.remove('submit-disabled');
@@ -237,11 +237,9 @@ function addNewCard() {
                 console.log('Новая карточка успешно создана:', newCardData);
                 // Можно обновить данные на странице, если необходимо
                 // Например, добавить новую карточку в интерфейс
-                const newCard = createCard(newCardData, deleteCard, toggleLike, user._id, openImagePopup);
+                const newCard = createCard(newCardData, deleteCard, toggleLike, user._id, openImagePopup, likeCard);
 
                 placesList.prepend(newCard);
-                // Возвращаем исходный текст кнопки после завершения запроса
-                saveButton.textContent = 'Сохранить';
                 saveButton.classList.add('submit-disabled');
                 newCardForm.reset()
                 closePopup(newCardPopup);
@@ -250,6 +248,10 @@ function addNewCard() {
                 // Обработка ошибки
                 console.error('Ошибка при создании новой карточки:', error);
             })
+            .finally(() => {
+                // Возвращаем исходный текст кнопки после завершения запроса
+                saveButton.textContent = 'Сохранить';
+            });
 
     });
 }
@@ -268,4 +270,4 @@ const formValidationConfig = {
     errorClass: "input_span",
 };
 
-formValidation(formValidationConfig)
+enableValidation(formValidationConfig)

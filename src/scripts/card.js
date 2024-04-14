@@ -3,13 +3,14 @@ import {deleteCardLikeApi, setCardLikeApi, deleteCardApi} from "./api";
 const cardTemplate = document.getElementById('card-template');
 
 // Функция создания карточки
-export function createCard(cardData, onDelete, onLike, userId, openImagePopup) {
+export function createCard(cardData, onDelete, onLike, userId, openImagePopup, likeCard) {
     const cardClone = cardTemplate.content.querySelector('.places__item').cloneNode(true);
     const cardTitle = cardClone.querySelector('.card__title');
     const cardImage = cardClone.querySelector('.card__image');
     const deleteButton = cardClone.querySelector('.card__delete-button');
     const likeButton = cardClone.querySelector('.card__like-button');
     const likesCounter = cardClone.querySelector('.card__likes-counter');
+
 
     cardTitle.textContent = cardData.name;
     cardImage.src = cardData.link;
@@ -61,32 +62,9 @@ export function toggleDeleteButton(deleteButton, ownerId, userId, cardId) {
     }
 }
 
-
 // Функция обработки события лайка
 export function toggleLike(likeButton) {
     likeButton.classList.toggle('card__like-button_is-active');
-}
-
-// Снятие лайка
-export async function deleteCardLike(cardsData, stroke) {
-    try {
-        const response = await deleteCardLikeApi(cardsData);
-
-        updateLikeCardUser(stroke, response);
-    } catch (error) {
-        console.error('Ошибка при снятии лайка:', error);
-    }
-}
-
-// Постановка лайка
-export async function setCardLike(cardsData, stroke) {
-    try {
-        const response = await setCardLikeApi(cardsData);
-
-        updateLikeCardUser(stroke, response);
-    } catch (error) {
-        console.error('Ошибка при постановке лайка:', error);
-    }
 }
 
 //Обновление количества лайков
@@ -102,28 +80,13 @@ export function deleteCard(cardElement) {
 //Возможность лайкать
 export function likeCard(likeButton, cardData, cardClone) {
     const numberLike = cardClone.querySelector('.card__likes-counter');
+    const isLiked = likeButton.classList.contains('card__like-button_is-active');
+    const likeMethod = isLiked ? deleteCardLikeApi : setCardLikeApi;
 
-    if (likeButton.classList.contains('card__like-button_is-active')) {
-        // Если лайк уже был поставлен, отправляем запрос на снятие лайка
-        deleteCardLike(cardData, numberLike)
-            .then(() => {
-                // Успешно удален лайк, обновляем UI
-                likeButton.classList.remove('card__like-button_is-active');
-            })
-            .catch(error => {
-                // Обработка ошибки при снятии лайка
-                console.error('Ошибка при снятии лайка:', error);
-            });
-    } else {
-        // Если лайк не был поставлен, отправляем запрос на установку лайка
-        setCardLike(cardData, numberLike)
-            .then(() => {
-                // Успешно поставлен лайк, обновляем UI
-                likeButton.classList.add('card__like-button_is-active');
-            })
-            .catch(error => {
-                // Обработка ошибки при постановке лайка
-                console.error('Ошибка при постановке лайка:', error);
-            });
-    }
+
+    likeMethod(cardData)
+        .then((res) => {
+            numberLike.textContent = res.likes.length;
+        })
+        .catch(err => console.log(`Ошибка при ${isLiked ? 'снятии' : 'постановке' } лайка:`, err));
 }

@@ -39,7 +39,7 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Обновить аватар</h3>
       <form class="popup__form" name="edit-avatar" novalidate>
-        <input id="input_type_avatar" type="url" name="link" class="popup__input popup__input_type_avatar" placeholder="Ссылка на картинку" data-validate-url required>
+        <input id="input_type_avatar" type="url" name="link" class="popup__input popup__input_type_avatar" placeholder="Ссылка на картинку" data-validate-url data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required>
 
         <div class="input__container">
           <span class="input-error input_type_avatar-error"></span>
@@ -56,13 +56,13 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Редактировать профиль</h3>
       <form class="popup__form" name="edit-profile" novalidate>
-        <input id="input_type_name" type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required minlength="2" maxlength="40">
+        <input id="input_type_name" type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required minlength="2" maxlength="40">
 
         <div class="input__container">
           <span class="input-error input_type_name-error"></span>
         </div>
 
-        <input id="input_type_description" type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" required minlength="2" maxlength="200">
+        <input id="input_type_description" type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required minlength="2" maxlength="200">
 
         <div class="input__container">
           <span class="input-error input_type_description-error"></span>
@@ -78,14 +78,14 @@
       <h3 class="popup__title">Новое место</h3>
       <form class="popup__form" name="new-place">
         <input id="input_type_card-name" type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" minlength="2" maxlength="30"
-               required>
+               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required>
 
         <div class="input__container">
           <span class="input-error input_type_card-name-error"></span>
         </div>
 
         <input id="input_type_card-url" type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" data-validate-url
-               required>
+               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required>
 
         <div class="input__container">
           <span class="input-error input_type_card-url-error"></span>

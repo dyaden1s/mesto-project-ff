@@ -1,19 +1,19 @@
 //Проверка данных форм
-export const formValidation = (formValidationConfig) => {
-    const findForm = Array.from(document.querySelectorAll(formValidationConfig.formSelector));
+export const enableValidation = (formValidationConfig) => {
+    const findForms = Array.from(document.querySelectorAll(formValidationConfig.formSelector));
 
-    findForm.forEach((form) => {
+    findForms.forEach((form) => {
         arrayInput(formValidationConfig, form);
     })
 }
 
 //Проверка всех инпутов
 const arrayInput = (formValidationConfig, form) => {
-    const findInput = Array.from(form.querySelectorAll(formValidationConfig.inputSelector))
+    const findInputs = Array.from(form.querySelectorAll(formValidationConfig.inputSelector))
     const saveButton = form.querySelector(formValidationConfig.submitButtonSelector)
     saveButton.classList.add(formValidationConfig.inactiveButtonClass);
 
-    findInput.forEach((input) => {
+    findInputs.forEach((input) => {
         input.addEventListener('input', () => {
             isValid(formValidationConfig, input);
             toggleButton(formValidationConfig, form, saveButton);
@@ -44,32 +44,27 @@ function hideError(formValidationConfig, input) {
 //Функция проверки валидности
 function isValid(formValidationConfig, input) {
     const regEx = /^[a-zа-я\s\-]+$/i;
+    const errorMessage = input.dataset.errorMessage;
 
-    if (input.hasAttribute('data-validate-url')) {
+    if (!input.validity.valid) {
         if (!checkURLValidity(input.value.trim())) {
             showError(formValidationConfig, input, input.validationMessage);
         } else {
             hideError(formValidationConfig, input);
         }
-        return
-    }
-
-    if (input.value.trim() == '') {
         showError(formValidationConfig, input, input.validationMessage)
-    }  else if (!regEx.test(input.value)) {
-        input.setCustomValidity("Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы");
-
-        showError(formValidationConfig, input, input.validationMessage)
-    }  else {
-        input.setCustomValidity("");
-        hideError(formValidationConfig, input)
-    }
-
-    if (!input.validity.valid) {
-        showError(formValidationConfig, input, input.validationMessage)
-    } else {
-        hideError(formValidationConfig, input)
-    }
+        } else {
+            hideError(formValidationConfig, input)
+        }
+        if (input.value.trim() == '') {
+            showError(formValidationConfig, input, input.validationMessage)
+        }  else if (!regEx.test(input.value)) {
+            input.setCustomValidity(errorMessage);
+            showError(formValidationConfig, input, input.validationMessage)
+        }  else {
+            input.setCustomValidity("");
+            hideError(formValidationConfig, input)
+        }
 
 }
 
@@ -80,28 +75,28 @@ function checkURLValidity(element) {
 }
 
 //Сброс ошибки
-export const updateInput = (formValidationConfig, form) => {
+export const clearValidation = (formValidationConfig, form) => {
     const inputList = form.querySelectorAll(formValidationConfig.inputSelector);
+    const saveButton = form.querySelector(formValidationConfig.submitButtonSelector);
 
     inputList.forEach((input) => {
         hideError(formValidationConfig, input);
-    })
+    });
 
+    if (saveButton) {
+        saveButton.disabled = true;
+    }
 }
 
 const toggleButton = (formValidationConfig, form, button) => {
     const inputList = Array.from(form.querySelectorAll(formValidationConfig.inputSelector));
-    let hasError = inputList.some(input => !input.validity.valid);
-    if (!hasError) {
-        inputList.forEach(input => {
-            if (!input.validity.valid) {
-                hasError = true;
-            }
-        });
-    }
+    const hasError = inputList.some(input => !input.validity.valid);
+
     if (hasError) {
         button.classList.add(formValidationConfig.inactiveButtonClass);
+        button.disabled = true;
     } else {
         button.classList.remove(formValidationConfig.inactiveButtonClass);
+        button.disabled = false;
     }
 };
