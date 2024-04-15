@@ -43,32 +43,23 @@ function hideError(formValidationConfig, input) {
 
 //Функция проверки валидности
 function isValid(formValidationConfig, input) {
-    const regEx = /^[a-zа-я\s\-]+$/i;
-    const errorMessage = input.dataset.errorMessage;
+    // const regEx = /^[a-zа-я\s\-]+$/i;
+    // const errorMessage = input.dataset.errorMessage;
 
+    if (input.validity.patternMismatch) {
+        input.setCustomValidity(input.dataset.errorMessage);
+    } else {
+        input.setCustomValidity("");
+    }
     if (!input.validity.valid) {
-        if (!checkURLValidity(input.value.trim())) {
-            showError(formValidationConfig, input, input.validationMessage);
-        } else {
-            hideError(formValidationConfig, input);
-        }
         showError(formValidationConfig, input, input.validationMessage)
-        } else {
-            hideError(formValidationConfig, input)
-        }
-        if (input.value.trim() == '') {
-            showError(formValidationConfig, input, input.validationMessage)
-        }  else if (!regEx.test(input.value)) {
-            input.setCustomValidity(errorMessage);
-            showError(formValidationConfig, input, input.validationMessage)
-        }  else {
-            input.setCustomValidity("");
-            hideError(formValidationConfig, input)
-        }
-
+    } else {
+        hideError(formValidationConfig, input);
+    }
 }
 
 //Функция проверки валидности url
+
 function checkURLValidity(element) {
     const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
     return urlRegex.test(element);
@@ -92,11 +83,18 @@ const toggleButton = (formValidationConfig, form, button) => {
     const inputList = Array.from(form.querySelectorAll(formValidationConfig.inputSelector));
     const hasError = inputList.some(input => !input.validity.valid);
 
+    const disableSubmitButton = (button, config) => {
+        if (config === true) {
+            button.classList.add(formValidationConfig.inactiveButtonClass);
+        } else {
+            button.classList.remove(formValidationConfig.inactiveButtonClass);
+        }
+        button.disabled = config;
+    }
+
     if (hasError) {
-        button.classList.add(formValidationConfig.inactiveButtonClass);
-        button.disabled = true;
+        disableSubmitButton(button, true)
     } else {
-        button.classList.remove(formValidationConfig.inactiveButtonClass);
-        button.disabled = false;
+        disableSubmitButton(button, false)
     }
 };

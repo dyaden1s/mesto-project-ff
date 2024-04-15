@@ -3,7 +3,7 @@ import {deleteCardLikeApi, setCardLikeApi, deleteCardApi} from "./api";
 const cardTemplate = document.getElementById('card-template');
 
 // Функция создания карточки
-export function createCard(cardData, onDelete, onLike, userId, openImagePopup, likeCard) {
+export function createCard(cardData, onDelete, userId, openImagePopup, onLike) {
     const cardClone = cardTemplate.content.querySelector('.places__item').cloneNode(true);
     const cardTitle = cardClone.querySelector('.card__title');
     const cardImage = cardClone.querySelector('.card__image');
@@ -21,8 +21,7 @@ export function createCard(cardData, onDelete, onLike, userId, openImagePopup, l
 
     // Добавляем обработчики событий для кнопок удаления и лайка
     likeButton.addEventListener('click', () => {
-        likeCard(likeButton, cardData, cardClone);
-        onLike(likeButton);
+        onLike(likeButton, cardData, cardClone);
     });
 
     // Добавляем обработчик события  удаления карточки на кнопку удаления
@@ -87,6 +86,7 @@ export function likeCard(likeButton, cardData, cardClone) {
     likeMethod(cardData)
         .then((res) => {
             numberLike.textContent = res.likes.length;
+            likeButton.classList.toggle('card__like-button_is-active');
         })
         .catch(err => console.log(`Ошибка при ${isLiked ? 'снятии' : 'постановке' } лайка:`, err));
 }

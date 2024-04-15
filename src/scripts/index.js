@@ -1,4 +1,4 @@
-import {createCard, toggleLike, deleteCard, likeCard} from "./card";
+import {createCard, deleteCard, likeCard} from "./card";
 import {openPopup, closePopup, closePopupByOverlay} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import {addNewCardApi, editProfileApi, getCards, getUser, updateAvatar} from "./api";
@@ -14,7 +14,7 @@ Promise.all([getUser(), getCards()])
         outputUserData(userData);
 
         cardsData?.forEach(card => {
-            const newCard = createCard(card, deleteCard, toggleLike, userData._id, openImagePopup, likeCard);
+            const newCard = createCard(card, deleteCard, userData._id, openImagePopup, likeCard);
             placesList.appendChild(newCard);
         });
 
@@ -192,8 +192,8 @@ function editProfile() {
                 // Обработка успешного обновления данных профиля
                 console.log('Данные профиля успешно обновлены:', updatedUserData);
                 // Вставляем новые значения в профиль
-                profileTitle.textContent = newName;
-                profileDescription.textContent = newAbout;
+                profileTitle.textContent = updatedUserData.name;
+                profileDescription.textContent = updatedUserData.about;
                 // Закрываем модальное окно
                 closePopup(editPopup);
             })
@@ -205,7 +205,6 @@ function editProfile() {
                 // Возвращаем исходный текст кнопки после завершения запроса
                 editSaveButton.textContent = 'Сохранить';
             });
-
     });
 }
 
@@ -237,7 +236,7 @@ function addNewCard() {
                 console.log('Новая карточка успешно создана:', newCardData);
                 // Можно обновить данные на странице, если необходимо
                 // Например, добавить новую карточку в интерфейс
-                const newCard = createCard(newCardData, deleteCard, toggleLike, user._id, openImagePopup, likeCard);
+                const newCard = createCard(newCardData, deleteCard, user._id, openImagePopup, likeCard);
 
                 placesList.prepend(newCard);
                 saveButton.classList.add('submit-disabled');
