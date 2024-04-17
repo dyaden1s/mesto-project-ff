@@ -9,7 +9,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "author": "",
+  "author": "dyadenis",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.23.9",
